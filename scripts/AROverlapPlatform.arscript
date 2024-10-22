@@ -1,0 +1,52 @@
+extends AROverlap
+
+var speed: float = 2
+var direction: float = 0
+
+var ScoreBar: ARProgressBar
+var Main: ARMain
+var Score_Text: ARLabel
+var Reactor1: ARImage
+var Reactor2: ARImage
+var ReactorManager: ARGroup
+
+func start() -> void:
+	Main = get_ar_element("Main") 
+	ReactorManager = get_ar_element("Main/Game_Reactor/ReactorGroup")
+	Reactor1 = get_ar_element("Main/Game_Reactor/ReactorGroup/Reactor1")
+	Reactor2 = get_ar_element("Main/Game_Reactor/ReactorGroup/Reactor2")
+	ScoreBar = get_ar_element("Main/Game_Reactor/ReactorGroup/ARScore")
+	Score_Text = get_ar_element("Main/Game_Reactor/TextGroup/Score")
+	api("subscribe_to", "swp_left_joypad_left", "joy_left_pressed")
+	api("subscribe_to", "swp_left_joypad_right", "joy_right_pressed")
+	
+func update_process(delta: float) -> void: 
+	if Main.is_game_2 == true:
+		self.left += self.speed * self.direction 
+	if self.left < 430:
+		self.left = 430
+	else: 
+		if self.left > 1350:
+			self.left = 1350 
+	if Reactor2.frame == 1:
+		speed = 1
+	elif Reactor1.frame == 1:
+		speed = 1.5
+
+# проверка нажатия
+func joy_left_pressed(state: String) -> void:
+	if state == "1":
+		direction = -1
+	else:
+		direction = 0
+
+# проверка нажатия
+func joy_right_pressed(state: String) -> void:
+	if state == "1":
+		direction = 1
+	else:
+		direction = 0
+	
+func on_honeycomb_caught(honey: int) -> void:
+	ScoreBar.current_percent += honey
+	Score_Text.text = str(ScoreBar.current_percent)

@@ -1,0 +1,13 @@
+extends ARFillRect
+
+var Main: ARMain
+
+func start() -> void:
+	self.border_width = 9
+	Main = get_ar_element("Main")
+
+func update_process(delta: float) -> void:
+	if Main.is_game_2:
+		self.visibility = false
+	else:
+		self.visibility = true

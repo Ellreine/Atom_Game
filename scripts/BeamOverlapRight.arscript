@@ -1,0 +1,60 @@
+extends AROverlap
+
+var frame_time: float = 0
+var fps: float = 12
+var is_animated:  bool = false
+var current_direction: int = 0
+
+var sprite: ARImage
+var Main: ARMain
+
+func start() -> void:
+	sprite = get_ar_element("Beam")
+	Main = get_ar_element("Main")
+	
+func update_process(delta: float) -> void:
+	if Main.is_game_1:
+		if is_animated:
+			
+			if frame_time >= 1.0 / fps:
+				# Время сменить кадр
+				sprite.frame_coord = Vector2(sprite.frame_coord.x + 1, current_direction)
+				frame_time = 0.0
+			frame_time += delta
+		
+			if sprite.frame_coord.x == 6:
+				is_animated = false
+			
+		else:
+			self.visibility = false
+			sprite.frame_coord.x = 0
+			self.top = -239.5
+			self.left = 1300
+		
+func Beam_Activation(direction) -> void:
+
+	if direction == "Right":
+		self.top = 356.0
+		self.left = 1046.0
+		self.visibility = true
+		current_direction = 1
+		
+	elif direction == "Left":
+		self.top = 356.0
+		self.left = 646.0
+		self.visibility = true
+		current_direction = 3
+		
+	elif direction == "Up":
+		self.top = 156.0
+		self.left = 846.0
+		self.visibility = true
+		current_direction = 0
+		
+	elif direction == "Down":
+		self.top = 556.0
+		self.left = 846.0
+		self.visibility = true
+		current_direction = 2
+		
+	is_animated = true

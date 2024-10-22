@@ -1,0 +1,13 @@
+extends ARImage
+
+var fps: float = 10
+var frame_time: float = 0
+var speed: float = 1
+var direction: float = 1
+var is_moving: bool = false
+
+func update_process(delta: float) -> void:
+	self.visibility = true
+	if is_moving:
+		self.top += self.speed * self.direction
+	

@@ -1,0 +1,58 @@
+extends AROverlap  
+
+var Spawned: bool = false
+var speed: float = 1.0
+var ground_y: float = 800.0  
+var direction: float = 1.0
+var random_pos: float = 525.0
+var Main: ARMain
+var Sprite: ARImage
+var Progress: ARProgressBar
+var inited: bool = false
+
+
+func start() -> void:	
+	Main = get_ar_element("Main")
+	Sprite = get_ar_element("ARImageHoneyComb3")
+	Progress = get_ar_element("Main/Game_Reactor/ReactorGroup/ARScore")
+
+func update_process(delta: float) -> void:
+	if Main.is_game_2 == true and inited:
+		self.top += self.speed * direction
+		
+	if Progress.current_percent < 30:
+		speed = 1
+	elif Progress.current_percent < 70:
+		speed = 1.5
+	elif Progress.current_percent < 110: 
+		speed = 2
+		
+	if self.top >= self.ground_y:
+		Progress.current_percent -= 3
+		delete()
+
+func init_honey() -> void:
+	inited = true
+	Main = get_ar_element("Main")
+	Sprite = get_ar_element("ARImageHoneyComb3")
+	var random_line = randi() % 4
+	if random_line == 0:
+		random_pos = 100
+	elif random_line == 1:
+		random_pos = 400
+	elif random_line == 2:
+		random_pos = 680
+	elif random_line == 3:
+		random_pos = 975
+	self.visibility = true
+	self.top = -65
+	self.left = random_pos
+	self.Spawned = true
+	Sprite.h_frames = 2
+	Sprite.v_frames = 2
+	Sprite.frame = 3
+	
+func overlap_start(ar_element: AROverlap) -> void:
+	if ar_element.name == "AROverlapPlatform":
+		ar_element.on_honeycomb_caught(3)
+		delete()

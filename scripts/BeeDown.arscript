@@ -1,0 +1,75 @@
+extends AROverlap
+
+var speed: float = 1.0
+var speed_min: float = 0.5
+var speed_max: float = 0.9
+var direction: float = -1.0
+var is_dead: bool = false
+
+var fps: float = 10
+var frame_time: float = 0
+
+var is_moving: bool = false
+var is_init: bool = false
+
+var left_max: int =  892
+var left_min: int = 800
+
+var plus_honey: int = 5
+
+var BarGroup: ARGroup
+var Main
+var sprite: ARImage
+
+func start():
+	Main = get_ar_element("Main")
+	sprite = get_ar_element("BeeDown")
+	
+func update_process(delta: float) -> void:
+	if Main.is_game_1 and is_moving and !is_dead:
+		self.top += self.speed * self.direction
+		if frame_time >= 1.0 / fps:
+			# Время сменить кадр
+			if sprite.frame == 9:
+				sprite.frame = 5
+			else:
+				sprite.frame += 1
+			frame_time = 0
+		frame_time += delta
+
+	elif Main.is_game_1 and is_dead:
+		if frame_time >= 1.0 / fps:
+			# Время сменить кадр
+			if sprite.frame == 4:
+				delete()
+			else:
+				sprite.frame += 1
+			frame_time = 0
+		frame_time += delta
+
+func init_bee() -> void:
+	Main = get_ar_element("Main")
+	sprite = get_ar_element("BeeDown")
+	self.visibility = true
+	self.left = int(rand_range(left_min, left_max))
+	self.speed = rand_range(speed_min, speed_max)
+	self.is_moving = true
+	self.sprite.h_frames = 5
+	self.sprite.v_frames = 2
+	self.sprite.frame = 5
+
+func overlap_start(ar_element: AROverlap) -> void:
+	if ar_element.name == "BeamOverlap":
+		BarGroup = get_ar_element("Main/Game_Battery/BarGroup")
+		BarGroup.add_honey(50)
+		sprite = get_ar_element("BeeDown")
+		is_dead = true
+		sprite.frame = 0
+		
+	elif ar_element.name == "DeathZone":
+		Main = get_ar_element("Main")
+		Main.send_sound_name("damaged")
+		BarGroup = get_ar_element("Main/Game_Battery/BarGroup")
+		BarGroup.steal_honey(-20)
+		delete()
+		

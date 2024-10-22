@@ -1,0 +1,26 @@
+extends AROverlap
+
+var speed: float = 1.0
+var speed_min: float = 0.7
+var speed_max: float = 1.0
+var direction: float = 1.0
+
+var is_moving: bool = false
+var is_init: bool = false
+
+var top_max: int =  416
+var top_min: int = 296
+
+func update_process(delta: float) -> void:
+	if is_moving:
+		self.left += self.speed * self.direction
+
+func init_bee() -> void:
+	self.visibility = true
+	self.top = int(rand_range(top_min, top_max))
+	self.speed = rand_range(speed_min, speed_max)
+	self.is_moving = true
+
+func overlap_start(ar_element: AROverlap) -> void:
+	if ar_element.name == "BeamOverlap":
+		delete()

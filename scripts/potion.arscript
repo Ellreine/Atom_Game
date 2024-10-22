@@ -1,0 +1,9 @@
+extends AROverlap
+
+var health_up: float = 3.0
+var sprite: ARImage
+
+func start() -> void:
+	sprite = get_ar_element("ARImage")
+	sprite.visibility = false
+	

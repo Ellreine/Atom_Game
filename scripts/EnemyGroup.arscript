@@ -1,0 +1,45 @@
+extends AROverlap
+
+var timer_delay_right: float = 1.5
+var timer_delay_left: float = 1.9
+var timer_delay_up: float = 2.6
+var timer_delay_down: float = 0.7
+
+var timer_min: float = 2.7
+var timer_max: float = 3.7
+var Main: ARMain
+
+func start() -> void:
+	Main = get_ar_element("Main")
+	timer_delay_right =  rand_range(timer_min, timer_max)
+	timer_delay_left =  rand_range(timer_min, timer_max)
+	timer_delay_up =  rand_range(timer_min, timer_max)
+	timer_delay_down =  rand_range(timer_min, timer_max)
+
+func update_process(delta: float) -> void:
+	if Main.is_game_1:
+		timer_delay_left -= delta
+		timer_delay_right -= delta
+		timer_delay_up -= delta
+		timer_delay_down -= delta
+	
+		if timer_delay_right <= 0:
+			var enemy = get_node("BaseEnemy").get_ar_element("BeeOverlapRight").duplicate_ar_element("BaseEnemy")
+			enemy.init_bee()
+			timer_delay_right = rand_range(timer_min, timer_max)
+
+		if timer_delay_left <= 0:
+			var enemy = get_node("BaseEnemy").get_ar_element("BeeOverlapLeft").duplicate_ar_element("BaseEnemy")
+			enemy.init_bee()
+			timer_delay_left = rand_range(timer_min, timer_max)
+		
+		if timer_delay_up <= 0:
+			var enemy = get_node("BaseEnemy").get_ar_element("BeeOverlapUp").duplicate_ar_element("BaseEnemy")
+			enemy.init_bee()
+			timer_delay_up = rand_range(timer_min, timer_max)
+
+		if timer_delay_down <= 0:
+			var enemy = get_node("BaseEnemy").get_ar_element("BeeOverlapDown").duplicate_ar_element("BaseEnemy")
+			enemy.init_bee()
+			timer_delay_down = rand_range(timer_min, timer_max)
+		

@@ -1,0 +1,60 @@
+extends ARGroup
+
+# Интервал спавна 
+var spawn_interval: float = 1.0
+var spawn_timer: float = 0.0
+var random_pos: float = 525
+
+var HoneyComb1: AROverlap
+var HoneyComb2: AROverlap
+var HoneyComb3: AROverlap
+var HoneyComb4: AROverlap
+var Toxin: AROverlap
+
+# Вероятности появления объектов
+var honey_prob: float = 0.65  # 65% на соту
+var toxin_prob: float = 0.35  # 35% на токсин
+
+func update_process(delta: float) -> void:
+	# Уменьшаем таймер на delta времени
+	spawn_timer -= delta
+
+	# Если таймер истёк, спавним объекты
+	if spawn_timer <= 0:
+		spawn_random_object()
+		spawn_interval = rand_range(0.5, 1.2)
+		spawn_timer = spawn_interval  # Сбрасываем таймер на случайное значение
+
+func spawn_random_object() -> void:
+	var random_value = randf()  
+	if random_value < honey_prob:
+		spawn_honeycomb()
+		api("out", "spawn_honey")
+	else:
+		spawn_toxin()
+		api("out", "spawn_toxin")
+
+func spawn_honeycomb() -> void:
+	var random_honey = randi() % 4
+	
+	if random_honey == 0:
+		HoneyComb1 = get_ar_element("AROverlapHoneyComb1").duplicate_ar_element("HoneyLines")
+		HoneyComb1.init_honey()
+		api("out", HoneyComb1)
+	elif random_honey == 1:
+		HoneyComb2 = get_ar_element("AROverlapHoneyComb2").duplicate_ar_element("HoneyLines")
+		HoneyComb2.init_honey()
+		api("out", HoneyComb2)
+	elif random_honey == 2:
+		HoneyComb3 = get_ar_element("AROverlapHoneyComb3").duplicate_ar_element("HoneyLines")
+		HoneyComb3.init_honey()
+		api("out", HoneyComb3)
+	elif random_honey == 3:
+		HoneyComb4 = get_ar_element("AROverlapHoneyComb4").duplicate_ar_element("HoneyLines")
+		HoneyComb4.init_honey()
+		api("out", HoneyComb4)
+	
+func spawn_toxin() -> void:
+	Toxin = get_ar_element("AROverlapToxin").duplicate_ar_element("HoneyLines")
+	Toxin.init_toxin()
+	

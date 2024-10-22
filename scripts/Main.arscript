@@ -1,0 +1,80 @@
+extends ARMain
+
+var is_game_1: bool = false
+var is_game_2: bool = false
+var is_game_2_over: bool = false
+var is_game_2_win: bool = false
+var is_pause: bool = false
+var timer: float = 1
+var stop_timer = 20
+var bear:AROverlap
+
+func start():
+#	subscribe_to_swp()
+	bear = get_ar_element("Game_Battery/Bear")
+	is_game_2 = true
+
+
+#func subscribe_to_swp():
+#		api('connect_to_swp_app', {
+#		'target_node' : self,
+#		'on_message' : 'on_message',
+#		'on_error' : 'on_error',
+#		'on_connected' : 'on_connected',
+#		'on_disconnected' : 'on_disconnected',
+#		})
+
+func on_message(message):
+	if message.has('game_id'):
+		if (message['game_id'] == "Game 1"):
+			api("out", "Запуск игры 1")
+			is_game_2 = true
+	elif message.has('type'):
+		var value = int(message["value"])
+		api("out", "Value is " + str(value) + " or " + str((message["value"])))
+		if message.type=="input_swipe_direction":
+			if (value == 0):
+				bear.attack_up()
+				pass
+			elif (value == 1):
+				bear.attack_down()
+				pass
+			elif (value == 2):
+				bear.attack_left()
+				pass
+			elif (value == 3):
+				bear.attack_right()
+				pass
+
+func on_connected():
+	api('out', 'Connected')
+	api('send_to_swp_app', 'Hello from HUD!')
+
+
+func on_disconnected():
+	api('out', 'Disconnected')
+
+
+func on_error(error_text:String):
+	api('out', to_json(error_text))
+	
+func send_game_status(status:String):
+	api("send_to_swp_app",{
+		'game_status':status
+	})
+	
+func send_sound_name(name:String):
+	api("send_to_swp_app",{
+		'sound_name':name
+	})
+	
+func update_process(delta: float) -> void:
+	#timer -= delta
+	stop_timer -= delta
+	
+	#if timer <= 0:
+	#	is_game = true
+	
+#	if stop_timer <= 0:
+#		is_game = false
+#		is_pause = true

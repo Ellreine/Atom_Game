@@ -1,0 +1,13 @@
+extends ARGroup
+
+var Main: ARMain
+
+func start() -> void:
+	Main = get_ar_element("Main")
+	self.visibility = false
+	
+func update_process(delta: float) -> void:
+	if Main.is_game_1:
+		self.visibility = true
+	else:
+		self.visibility = false

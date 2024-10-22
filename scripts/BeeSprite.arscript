@@ -1,0 +1,4 @@
+extends ARImage
+
+func start() -> void:
+	frame_coord = Vector2(0, 1)

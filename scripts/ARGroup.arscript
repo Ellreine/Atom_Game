@@ -1,0 +1,4 @@
+class_name Gamemanager
+
+var is_Visible: bool = false
+

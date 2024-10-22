@@ -1,0 +1,27 @@
+extends AROverlap
+
+var frame_time: float = 0
+var fps: float = 10
+var is_animated:  bool = false
+var sprite: ARImage 
+
+func start() -> void:
+	sprite = get_ar_element("beamUp")
+	
+func update_process(delta: float) -> void:
+	if is_animated:
+		sprite.visibility = true
+		if frame_time >= 1.0 / fps:
+			# Время сменить кадр
+			sprite.frame += 1
+			frame_time = 0.0
+		frame_time += delta
+		
+		if sprite.frame == 3:
+			is_animated = false
+			
+	else:
+		sprite.visibility = false
+		sprite.frame = 0
+		
+		

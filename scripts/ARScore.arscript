@@ -1,0 +1,10 @@
+extends ARProgressBar
+
+var Main: ARMain
+
+func start() -> void:	
+	Main = get_ar_element("Main")
+
+func update_process(delta: float) -> void:
+	if self.current_percent >= 100:
+		Main.is_game_2_win = true

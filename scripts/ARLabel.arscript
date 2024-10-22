@@ -1,0 +1,8 @@
+extends ARLabel
+
+var Main: ARMain
+
+func start() -> void:
+	Main = get_ar_element("Main")
+
+	api("out", "sss")

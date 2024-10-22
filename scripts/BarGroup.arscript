@@ -1,0 +1,86 @@
+extends ARGroup
+
+var barUpLeft:  ARProgressBar
+var barUpRight:  ARProgressBar
+var barDownLeft:  ARProgressBar
+var barDownRight:  ARProgressBar
+var Main: ARMain
+
+
+var current_Bar: int = 0
+var current_percent: float = 0
+
+func start() -> void:
+	barUpLeft = get_ar_element("BarUpLeft")
+	barUpRight = get_ar_element("BarUpRight")
+	barDownLeft = get_ar_element("BarDownLeft")
+	barDownRight = get_ar_element("BarDownRight")
+	Main = get_ar_element("Main")
+	
+	
+# ADD_HONEY
+func add_honey(honey) -> void:
+	current_percent += honey
+	
+	if current_Bar == 0:
+		barUpLeft.current_percent = current_percent
+		if current_percent >= 100:
+			current_Bar = 1
+			current_percent = 0
+			barUpRight.current_percent = 0
+			
+	elif current_Bar == 1:
+		barUpRight.current_percent = current_percent
+		if current_percent >= 100:
+			current_Bar = 2
+			current_percent = 0
+			barDownLeft.current_percent = 0
+			
+	elif current_Bar == 2:
+		barDownLeft.current_percent = current_percent
+		if current_percent >= 100:
+			current_Bar = 3
+			current_percent = 0
+			barDownRight.current_percent= 0
+			
+	elif current_Bar == 3:
+		barDownRight.current_percent = current_percent
+		if current_percent >= 100:
+			current_Bar = 4
+			
+	elif current_Bar >= 4:
+		Main.send_game_status("game_over")
+		Main.is_game_1 = false
+		
+
+# STEAL_HONEY
+func steal_honey(honey) -> void:
+	current_percent += honey
+	
+	if current_Bar == 3:
+		barDownRight.current_percent = current_percent
+		if current_percent <= 0:
+			current_Bar = 2
+			current_percent = 100
+			barDownLeft.current_percent = 100
+			
+	elif current_Bar == 2:
+		barDownLeft.current_percent = current_percent
+		if current_percent <= 0:
+			current_Bar = 1
+			current_percent = 100
+			barUpRight.current_percent = 100
+
+	elif current_Bar == 1:
+		barUpRight.current_percent = current_percent
+		if current_percent <= 0:
+			current_Bar = 0
+			current_percent = 100
+			barUpLeft.current_percent = 100
+			
+	elif current_Bar == 0:
+		barUpLeft.current_percent = current_percent
+		if current_percent <= 0:
+			current_percent = 0
+			current_Bar = 0
+			barUpLeft.current_percent = 0

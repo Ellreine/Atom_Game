@@ -1,0 +1,13 @@
+extends ARImage
+
+var is_Animated: bool = false
+
+var parent: AROverlap
+var dwarf: AROverlap
+
+var fps: float
+var frame_time: float = 0
+
+func start() -> void:
+	parent = get_parent()
+	parent.is_Animated = false

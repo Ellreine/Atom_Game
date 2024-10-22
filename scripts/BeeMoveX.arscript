@@ -1,0 +1,12 @@
+extends ARImage
+
+var fps: float = 10
+var frame_time: float = 0
+var speed: float = 1
+var direction: float = 1
+
+func start() -> void:
+	self.visibility = true
+
+func update_process(delta: float) -> void:
+	self.left += self.speed * self.direction

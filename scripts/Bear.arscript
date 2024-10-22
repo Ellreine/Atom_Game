@@ -1,0 +1,104 @@
+extends AROverlap
+
+enum Direction{
+  up,
+  right,
+  down,
+  left
+}
+
+var is_animated: bool
+
+var direction: int = Direction.down
+var is_moving: bool = false
+var fps: float = 10
+var frame_time: float = 0
+
+var sprite: ARImage
+var Beam: AROverlap
+var Main: ARMain
+
+func start() -> void:
+	sprite = get_ar_element("BearSprite")
+	Beam = get_parent().get_node("BeamGroup").get_node("BeamOverlap")
+	Main = get_ar_element("Main")
+	
+
+func update_process(delta: float) -> void:
+	if Main.is_game_1:
+		if is_moving:
+			is_animated = true
+			if frame_time >= 1.0 / fps:
+				# Время сменить кадр
+				var frame_num: int = sprite.frame_coord.x
+				frame_num += 1
+				frame_time = 0.0
+				sprite.frame_coord = Vector2(frame_num, direction)
+			frame_time += delta
+		
+			if sprite.frame_coord.x == 6:
+				is_moving = false
+				is_animated = false
+
+		else:
+			sprite.frame_coord = Vector2(0, direction)
+
+func joy_up_pressed(state: String) -> void:
+	if state == "1" and Main.is_game_1 and is_animated == false:
+		is_moving = true
+		direction = Direction.up
+		sprite.frame_coord = Vector2(0, direction)
+		Beam.Beam_Activation("Up")
+
+func joy_down_pressed(state: String) -> void:
+	if state == "1" and Main.is_game_1 and is_animated == false:
+		is_moving = true
+		direction = Direction.down
+		sprite.frame_coord = Vector2(0, direction)
+		Beam.Beam_Activation("Down")
+
+func joy_right_pressed(state: String) -> void:
+	if state == "1" and Main.is_game_1 and is_animated == false:
+		is_moving = true
+		direction = Direction.right
+		sprite.frame_coord = Vector2(0, direction)
+		Beam.Beam_Activation("Right")
+
+func joy_left_pressed(state: String) -> void:
+	if state == "1" and Main.is_game_1 and is_animated == false:
+		is_moving = true
+		direction = Direction.left
+		sprite.frame_coord = Vector2(0, direction)
+		Beam.Beam_Activation("Left")
+		
+func attack_up() -> void:
+	if Main.is_game_1 and is_animated == false:
+		Main.send_sound_name("shot")
+		is_moving = true
+		direction = Direction.up
+		sprite.frame_coord = Vector2(0, direction)
+		Beam.Beam_Activation("Up")
+		
+func attack_down() -> void:
+	if Main.is_game_1 and is_animated == false:
+		Main.send_sound_name("shot")
+		is_moving = true
+		direction = Direction.down
+		sprite.frame_coord = Vector2(0, direction)
+		Beam.Beam_Activation("Down")
+
+func attack_right() -> void:
+	if Main.is_game_1 and is_animated == false:
+		Main.send_sound_name("shot")
+		is_moving = true
+		direction = Direction.right
+		sprite.frame_coord = Vector2(0, direction)
+		Beam.Beam_Activation("Right")
+		
+func attack_left() -> void:
+	if Main.is_game_1 and is_animated == false:
+		Main.send_sound_name("shot")
+		is_moving = true
+		direction = Direction.left
+		sprite.frame_coord = Vector2(0, direction)
+		Beam.Beam_Activation("Left")

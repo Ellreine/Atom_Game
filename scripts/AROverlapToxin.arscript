@@ -1,0 +1,60 @@
+extends AROverlap  
+
+var Spawned: bool = false
+var random_pos: float = 100
+var speed: float = 1.2
+var ground_y: float = 800.0  
+var direction: float = 1
+var Main: ARMain
+var ReactorManager: ARGroup
+var Sprite: ARImage
+var Progress: ARProgressBar
+var inited: bool = false
+
+
+func start() -> void:	
+	Main = get_ar_element("Main")
+	Sprite = get_ar_element("ARImageToxin")
+	Progress = get_ar_element("Main/Game_Reactor/ReactorGroup/ARScore")
+
+func update_process(delta: float) -> void:
+	if Main.is_game_2 == true and Spawned == true and inited:
+		self.top += self.speed * direction
+		
+	if Progress.current_percent < 30:
+		speed = 1.2
+	elif Progress.current_percent < 70:
+		speed = 1.8
+	elif Progress.current_percent < 110: 
+		speed = 2.4
+		
+	if self.top >= self.ground_y:
+		delete()
+		
+func init_toxin() -> void:
+	inited = true
+	Main = get_ar_element("Main")
+	Sprite = get_ar_element("ARImageToxin")
+	var random_line = randi() % 4
+	if random_line == 0:
+		random_pos = 100
+	elif random_line == 1:
+		random_pos = 400
+	elif random_line == 2:
+		random_pos = 680
+	elif random_line == 3:
+		random_pos = 975
+	self.visibility = true
+	self.top = -65
+	self.left = random_pos
+	self.Spawned = true
+	Sprite.h_frames = 2
+	Sprite.v_frames = 2
+	Sprite.frame = 0
+
+func overlap_start(ar_element: AROverlap) -> void:
+	if ar_element.name == "AROverlapPlatform":
+		ReactorManager = get_ar_element("Main/Game_Reactor/ReactorGroup")
+		ReactorManager.destroy_reactor()
+		delete()
+		

@@ -1,0 +1,24 @@
+extends ARGroup
+
+var count: int = 0
+
+var Main: ARMain
+var Reactor1: ARImage
+var Reactor2: ARImage
+var Reactor3: ARImage
+
+func start() -> void:	
+	Main = get_ar_element("Main")
+	Reactor1 = get_ar_element("Main/Game_Reactor/ReactorGroup/Reactor1")
+	Reactor2 = get_ar_element("Main/Game_Reactor/ReactorGroup/Reactor2")
+	Reactor3 = get_ar_element("Main/Game_Reactor/ReactorGroup/Reactor3")
+
+func destroy_reactor() -> void:
+	count += 1
+	if count == 1:
+		Reactor1.frame += 1
+	elif count == 2:
+		Reactor2.frame +=1
+	elif count == 3:
+		Reactor3.frame +=1
+		Main.is_game_2_over = true
